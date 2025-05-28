@@ -10,6 +10,7 @@ from pathlib import Path
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
+from core.pose_estimation.model_factory import PoseModelFactory
 from core.pose_estimation.mediapipe_holistic import MediaPipeHolisticEstimator
 from core.pose_processing.pose_tracker import PoseTracker
 from core.pose_processing.pose_filter import PoseFilter
@@ -24,6 +25,9 @@ class LivePoseService:
         self.pose_tracker = PoseTracker()
         self.pose_filter = PoseFilter(config.get("processing", {}))
         
+        # Model selection
+        self.model_type = config.get("pose", {}).get("model_type", "mediapipe")
+        
         # Performance tracking
         self.frame_count = 0
         self.total_processing_time = 0.0
@@ -37,15 +41,22 @@ class LivePoseService:
     def initialize(self) -> bool:
         """Initialize the pose estimation service"""
         try:
-            # Initialize MediaPipe Holistic
-            self.pose_estimator = MediaPipeHolisticEstimator(
+            # Create pose estimator using factory
+            self.pose_estimator = PoseModelFactory.create_estimator(
+                self.model_type, 
                 self.config.get("pose", {})
             )
             
-            success = self.pose_estimator.initialize()
-            if not success:
+            if self.pose_estimator is None:
+                print(f"Failed to create pose estimator for model type: {self.model_type}")
                 return False
             
+            success = self.pose_estimator.initialize()
+            if not success:
+                print(f"Failed to initialize {self.model_type} pose estimator")
+                return False
+            
+            print(f"Successfully initialized {self.model_type} pose estimator")
             return True
             
         except Exception as e:

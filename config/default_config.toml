@@ -1,18 +1,48 @@
+###############################################################################
+## TRIAGEROM PROJECT PARAMETERS                                               ##
+###############################################################################
+
 [api]
 host = "0.0.0.0"
 port = 8000
 debug = true
 title = "TriageROM API"
 version = "1.0.0"
+log_level = "INFO"
+log_file = ""
 
 [pose]
-model_type = "mediapipe_holistic"
+# Model selection: 'mediapipe', 'rtmpose', 'openpose'
+model_type = "mediapipe"
+
+# MediaPipe Holistic settings
 min_detection_confidence = 0.5
 min_tracking_confidence = 0.5
 static_image_mode = false
 model_complexity = 1
 smooth_landmarks = true
 enable_segmentation = false
+refine_face_landmarks = false
+
+# RTMPose specific settings
+rtmpose_model_type = "body_with_feet"  # 'body_with_feet', 'whole_body', 'body', 'hand'
+rtmpose_mode = "balanced"  # 'lightweight', 'balanced', 'performance'
+rtmpose_det_frequency = 1
+
+# OpenPose specific settings
+openpose_model_folder = "./models/"
+openpose_face = false
+openpose_hand = false
+
+# Quality thresholds
+min_pose_confidence = 0.5
+min_keypoint_visibility = 0.5
+required_keypoints = ["nose", "left_shoulder", "right_shoulder", "left_hip", "right_hip"]
+
+# Processing parameters
+keypoint_likelihood_threshold = 0.3
+average_likelihood_threshold = 0.5
+keypoint_number_threshold = 0.3
 
 [loweback]
 enable_guidance = false
@@ -21,6 +51,7 @@ target_extension_rom = 15.0
 movement_timeout_seconds = 30
 min_movement_threshold = 2.0
 max_compensation_threshold = 0.3
+completion_threshold = 0.8
 
 [processing]
 enable_smoothing = true
@@ -30,13 +61,163 @@ filter_order = 4
 filter_cutoff = 6.0
 interpolate_missing = true
 max_gap_frames = 10
+sampling_rate = 30.0
+
+# Smoothing settings
+smoothing_method = "moving_average"  # 'moving_average', 'exponential', 'kalman'
+smoothing_window_size = 5
+max_smoothing_history = 30
+exponential_alpha = 0.3
+kalman_process_var = 1e-3
+kalman_measurement_var = 1e-1
+
+# Gaussian filter settings
+gaussian_sigma = 1.0
+
+# Median filter settings
+median_kernel_size = 5
 
 [session]
 auto_save_mot = true
 session_timeout_minutes = 10
 max_concurrent_sessions = 50
+data_directory = "./session_data"
+max_session_duration_minutes = 30
+auto_cleanup_sessions = true
 
 [quality]
 min_pose_confidence = 0.5
 min_keypoint_visibility = 0.5
 required_keypoints = ["nose", "left_shoulder", "right_shoulder", "left_hip", "right_hip"]
+
+[px_to_meters_conversion]
+to_meters = true
+make_c3d = true
+save_calib = true
+floor_angle = "auto"
+xy_origin = ["auto"]
+calib_file = ""
+
+[angles]
+# Display settings
+display_angle_values_on = ["body", "list"]
+fontSize = 0.6
+thickness = 2
+
+# Calculate all angles including joint and segment angles
+calculate_all_angles = true
+
+# Joint angles to calculate and display
+joint_angles = [
+    "right ankle", "left ankle", 
+    "right knee", "left knee", 
+    "right hip", "left hip", 
+    "right shoulder", "left shoulder", 
+    "right elbow", "left elbow", 
+    "right wrist", "left wrist"
+]
+
+# Segment angles to calculate and display
+segment_angles = [
+    "right foot", "left foot",
+    "right shank", "left shank", 
+    "right thigh", "left thigh",
+    "pelvis", "trunk", "shoulders", "head",
+    "right arm", "left arm",
+    "right forearm", "left forearm"
+]
+
+# Angle processing
+flip_left_right = true
+correct_segment_angles_with_floor_angle = true
+
+[visualization]
+# Sports2D style visualization
+enable_sports2d_style = true
+draw_skeleton = true
+draw_keypoints = true
+draw_angles = true
+draw_bounding_boxes = true
+draw_angle_arcs = true
+draw_angle_labels = true
+
+# Color settings
+confidence_colormap = "RdYlGn"  # Red-Yellow-Green colormap for confidence
+skeleton_color_scheme = "body_part"  # 'body_part', 'uniform', 'confidence'
+
+# Keypoint visualization
+keypoint_radius_base = 3
+keypoint_radius_scale = 4
+keypoint_outline = true
+
+# Skeleton visualization
+skeleton_thickness_base = 1
+skeleton_thickness_scale = 3
+skeleton_confidence_threshold = 0.3
+
+# Angle visualization
+angle_arc_radius = 30
+angle_text_offset = 40
+angle_line_thickness = 2
+show_reference_lines = true
+
+# Bounding box
+bbox_padding = 15
+bbox_thickness = 2
+show_person_id = true
+
+# Image settings for processing
+image_width = 640
+image_height = 480
+
+[post-processing]
+interpolate = true
+interp_gap_smaller_than = 10
+fill_large_gaps_with = "last_value"  # 'last_value', 'nan', 'zeros'
+
+filter = true
+show_graphs = false  # Set to true if you want to see plots
+filter_type = "butterworth"
+
+[post-processing.butterworth]
+order = 4
+cut_off_frequency = 6
+
+[post-processing.gaussian]
+sigma_kernel = 1
+
+[post-processing.loess]
+nb_values_used = 5
+
+[post-processing.median]
+kernel_size = 3
+
+[kinematics]
+do_ik = false
+use_augmentation = false
+feet_on_floor = false
+use_contacts_muscles = true
+participant_mass = [70.0]
+right_left_symmetry = true
+default_height = 1.7
+remove_individual_scaling_setup = true
+remove_individual_ik_setup = true
+fastest_frames_to_remove_percent = 0.1
+close_to_zero_speed_px = 50
+close_to_zero_speed_m = 0.2
+large_hip_knee_angles = 45
+trimmed_extrema_percent = 0.5
+osim_setup_path = "../OpenSim_setup"
+
+[camera]
+camera_id = 0
+camera_width = 640
+camera_height = 480
+camera_fps = 30
+brightness = 0.5
+contrast = 0.5
+exposure = -3
+gain = 0
+
+[logging]
+use_custom_logging = false
