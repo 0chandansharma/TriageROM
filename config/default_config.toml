@@ -1,0 +1,42 @@
+[api]
+host = "0.0.0.0"
+port = 8000
+debug = true
+title = "TriageROM API"
+version = "1.0.0"
+
+[pose]
+model_type = "mediapipe_holistic"
+min_detection_confidence = 0.5
+min_tracking_confidence = 0.5
+static_image_mode = false
+model_complexity = 1
+smooth_landmarks = true
+enable_segmentation = false
+
+[loweback]
+enable_guidance = false
+target_flexion_rom = 50.0
+target_extension_rom = 15.0
+movement_timeout_seconds = 30
+min_movement_threshold = 2.0
+max_compensation_threshold = 0.3
+
+[processing]
+enable_smoothing = true
+enable_filtering = true
+filter_type = "butterworth"
+filter_order = 4
+filter_cutoff = 6.0
+interpolate_missing = true
+max_gap_frames = 10
+
+[session]
+auto_save_mot = true
+session_timeout_minutes = 10
+max_concurrent_sessions = 50
+
+[quality]
+min_pose_confidence = 0.5
+min_keypoint_visibility = 0.5
+required_keypoints = ["nose", "left_shoulder", "right_shoulder", "left_hip", "right_hip"]
