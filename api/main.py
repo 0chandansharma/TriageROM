@@ -149,6 +149,9 @@ async def complete_session(session_id: str, background_tasks: BackgroundTasks):
 async def analyze_frame(request: LiveAnalysisRequest):
     """Analyze a single frame for pose and ROM"""
     try:
+        # Add size validation
+        # if len(request.image_data) > 10 * 1024 * 1024:  # 10MB limit
+        #     raise HTTPException(status_code=413, detail="Image too large")
         # Decode base64 image
         image_data = base64.b64decode(request.image_data)
         nparr = np.frombuffer(image_data, np.uint8)
@@ -160,13 +163,25 @@ async def analyze_frame(request: LiveAnalysisRequest):
         # Analyze pose
         pose_result = pose_service.analyze_frame(image)
         
+        # if not pose_result.get("pose_detected", False):
+        #     return {
+        #         "status": "no_pose_detected",
+        #         "message": "No person detected in frame",
+        #         "timestamp": pose_result.get("timestamp")
+        #     }
         if not pose_result.get("pose_detected", False):
             return {
                 "status": "no_pose_detected",
                 "message": "No person detected in frame",
-                "timestamp": pose_result.get("timestamp")
+                "timestamp": pose_result.get("timestamp"),
+                "guidance": {
+                    "instructions": [
+                        "Step back to show full body",
+                        "Ensure good lighting",
+                        "Face the camera directly"
+                    ]
+                }
             }
-        
         # Analyze lower back ROM
         rom_result = loweback_service.analyze_movement(
             pose_result,

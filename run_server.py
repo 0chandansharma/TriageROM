@@ -25,7 +25,7 @@ if __name__ == "__main__":
     print("Server will be available at:")
     print("  http://localhost:8000/docs")
     print("  http://localhost:8000/redoc")
-    print()
+    print()s
     
     uvicorn.run(
         app,

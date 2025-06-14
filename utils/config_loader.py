@@ -36,8 +36,13 @@ class ConfigLoader:
                 return config_data.copy()
             else:
                 print(f"Warning: Config file {config_file} not found")
-                return {}
-                
+                default_config = {
+                "api": {"host": "0.0.0.0", "port": 8000},
+                "pose": {"model_type": "mediapipe"},
+                "loweback": {"target_flexion_rom": 50.0, "target_extension_rom": 15.0}
+                }
+                return default_config   
+                    
         except Exception as e:
             print(f"Error loading config {config_name}: {e}")
             return {}

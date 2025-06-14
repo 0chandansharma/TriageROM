@@ -1,0 +1,52 @@
+{
+  "session_info": {
+    "session_id": "lumbar_rom_1748791654_d98c1faa",
+    "session_type": "lumbar_rom",
+    "created_at": 1748791654.362405,
+    "completed_at": 1748791660.0034869,
+    "duration": 5.641081809997559
+  },
+  "analysis_results": {
+    "status": "completed",
+    "session_duration": 5.442846775054932,
+    "movement_type": "flexion_extension_cycle",
+    "final_results": {
+      "flexion_rom": 125.48,
+      "extension_rom": 1.7,
+      "total_rom": 127.18,
+      "normal_range": {
+        "flexion": 50.0,
+        "extension": 15.0,
+        "total": 65.0
+      },
+      "rom_percentage": 195.7,
+      "assessment": "normal_range"
+    },
+    "movement_quality": {
+      "overall_score": 83.2,
+      "smoothness_score": 54.4,
+      "consistency_score": 97.5
+    },
+    "detailed_metrics": {
+      "movement_duration": 5.4,
+      "peak_velocity": 22.3,
+      "data_points": 88,
+      "repetitions_completed": 1
+    },
+    "clinical_insights": {
+      "primary_limitation": "extension_range",
+      "recommendations": [
+        "Strengthen back extensors",
+        "Improve spinal extension mobility"
+      ],
+      "strengths": [
+        "Good flexion range"
+      ]
+    }
+  },
+  "movement_data": [],
+  "file_paths": {
+    "mot_file": null,
+    "json_data": null
+  }
+}

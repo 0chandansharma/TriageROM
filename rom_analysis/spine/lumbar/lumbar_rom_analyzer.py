@@ -6,13 +6,15 @@ import time
 from typing import Dict, List, Optional, Tuple
 import sys
 from pathlib import Path
+import math
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
+from scipy import signal
 from base_rom_analyzer import BaseROMAnalyzer
 from core.angle_calculation.spine_angles import SpineAngleCalculator
-
+# from ...base_rom_analyzer import BaseROMAnalyzer
 class LumbarROMAnalyzer(BaseROMAnalyzer):
     """Lower back Range of Motion analyzer"""
     
